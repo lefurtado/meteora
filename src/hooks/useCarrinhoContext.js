@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { CarrinhoContext } from "@/context/CarrinhoContext";
 
 export const useCarrinhoContext = () => {
@@ -66,7 +66,7 @@ export const useCarrinhoContext = () => {
     setCarrinho(produto);
   }
 
-  useEffect(() => {
+  const { quantidadeTotal, precoTotal } = useMemo (() => {
     let quantidadeTotal = 0;
     let precoTotal = 0;
 
@@ -75,9 +75,13 @@ export const useCarrinhoContext = () => {
       precoTotal += produto.preco * produto.quantidade;
     });
 
+    return { quantidadeTotal, precoTotal }
+  }, [carrinho])
+
+  useEffect(() => {
     setQuantidade(quantidadeTotal);
     setValorTotal(precoTotal);
-  }, [carrinho]);
+  }, [quantidadeTotal, precoTotal]);
 
   return {
     carrinho,
